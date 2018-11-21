@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "fce16d73-ba22-4a07-8e14-990407ace863++9741",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "fce16d73-ba22-4a07-8e14-990407ace863++9741" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "fce16d73-ba22-4a07-8e14-990407ace863++9741" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "89FF7913-38E0-487A-9B71-3D49809B81BF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "fce16d73-ba22-4a07-8e14-990407ace863++9741" : "ios\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "CNCMobStreamLibDemo",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "trunk\/CNCMobStreamLibDemo\/CNCMobStreamLibDemo.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/10.8.199.33:10219\/MobStreaming",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "fce16d73-ba22-4a07-8e14-990407ace863++9741"
+    }
+  ]
+}

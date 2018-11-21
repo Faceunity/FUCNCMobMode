@@ -1,0 +1,6 @@
+framework module CNCMobStreamFramework {
+  umbrella header "CNCMobStreamFramework.h"
+
+  export *
+  module * { export * }
+}
