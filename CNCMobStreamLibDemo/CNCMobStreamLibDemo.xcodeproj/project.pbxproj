@@ -9,10 +9,7 @@
 /* Begin PBXBuildFile section */
 		0B27A111218AAF9E00E0CA59 /* libnama.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27A0FE218AAF9E00E0CA59 /* libnama.a */; };
 		0B27A112218AAF9E00E0CA59 /* release_note.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A0FF218AAF9E00E0CA59 /* release_note.txt */; };
-		0B27A113218AAF9E00E0CA59 /* anim_model.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A101218AAF9E00E0CA59 /* anim_model.bundle */; };
-		0B27A114218AAF9E00E0CA59 /* ardata_ex.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A102218AAF9E00E0CA59 /* ardata_ex.bundle */; };
 		0B27A115218AAF9E00E0CA59 /* face_beautification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A103218AAF9E00E0CA59 /* face_beautification.bundle */; };
-		0B27A116218AAF9E00E0CA59 /* fxaa.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A104218AAF9E00E0CA59 /* fxaa.bundle */; };
 		0B27A117218AAF9E00E0CA59 /* v3.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0B27A105218AAF9E00E0CA59 /* v3.bundle */; };
 		0B27A118218AAF9E00E0CA59 /* FUAPIDemoBar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B27A106218AAF9E00E0CA59 /* FUAPIDemoBar.framework */; };
 		0B27A119218AAF9E00E0CA59 /* FUManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B27A108218AAF9E00E0CA59 /* FUManager.m */; };
@@ -265,6 +262,9 @@
 		9CA382071CEDF7FC008FC924 /* icon_120.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CA381F91CEDF7FC008FC924 /* icon_120.png */; };
 		9CA382081CEDF7FC008FC924 /* icon_144.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CA381FA1CEDF7FC008FC924 /* icon_144.png */; };
 		9CA3820A1CEDF7FC008FC924 /* icon_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 9CA381FC1CEDF7FC008FC924 /* icon_180.png */; };
+		E38BB6C9243EBBB80013BA99 /* libfuai.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E38BB6C8243EBBB80013BA99 /* libfuai.a */; };
+		E38BB6CD243EBE010013BA99 /* tongue.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E38BB6CB243EBE010013BA99 /* tongue.bundle */; };
+		E38BB6CE243EBE010013BA99 /* ai_face_processor.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E38BB6CC243EBE010013BA99 /* ai_face_processor.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -321,21 +321,18 @@
 		0B27A0FD218AAF9E00E0CA59 /* FURenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FURenderer.h; sourceTree = "<group>"; };
 		0B27A0FE218AAF9E00E0CA59 /* libnama.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libnama.a; sourceTree = "<group>"; };
 		0B27A0FF218AAF9E00E0CA59 /* release_note.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_note.txt; sourceTree = "<group>"; };
-		0B27A101218AAF9E00E0CA59 /* anim_model.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = anim_model.bundle; sourceTree = "<group>"; };
-		0B27A102218AAF9E00E0CA59 /* ardata_ex.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = ardata_ex.bundle; sourceTree = "<group>"; };
-		0B27A103218AAF9E00E0CA59 /* face_beautification.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = face_beautification.bundle; sourceTree = "<group>"; };
-		0B27A104218AAF9E00E0CA59 /* fxaa.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = fxaa.bundle; sourceTree = "<group>"; };
-		0B27A105218AAF9E00E0CA59 /* v3.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = v3.bundle; sourceTree = "<group>"; };
+		0B27A103218AAF9E00E0CA59 /* face_beautification.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = face_beautification.bundle; sourceTree = "<group>"; };
+		0B27A105218AAF9E00E0CA59 /* v3.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = v3.bundle; sourceTree = "<group>"; };
 		0B27A106218AAF9E00E0CA59 /* FUAPIDemoBar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FUAPIDemoBar.framework; sourceTree = "<group>"; };
 		0B27A107218AAF9E00E0CA59 /* FUManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FUManager.h; sourceTree = "<group>"; };
 		0B27A108218AAF9E00E0CA59 /* FUManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FUManager.m; sourceTree = "<group>"; };
-		0B27A10A218AAF9E00E0CA59 /* fengya_ztt_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = fengya_ztt_fu.bundle; sourceTree = "<group>"; };
-		0B27A10B218AAF9E00E0CA59 /* hudie_lm_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = hudie_lm_fu.bundle; sourceTree = "<group>"; };
-		0B27A10C218AAF9E00E0CA59 /* juanhuzi_lm_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = juanhuzi_lm_fu.bundle; sourceTree = "<group>"; };
-		0B27A10D218AAF9E00E0CA59 /* mask_hat.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = mask_hat.bundle; sourceTree = "<group>"; };
-		0B27A10E218AAF9E00E0CA59 /* touhua_ztt_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = touhua_ztt_fu.bundle; sourceTree = "<group>"; };
-		0B27A10F218AAF9E00E0CA59 /* yazui.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = yazui.bundle; sourceTree = "<group>"; };
-		0B27A110218AAF9E00E0CA59 /* yuguan.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = yuguan.bundle; sourceTree = "<group>"; };
+		0B27A10A218AAF9E00E0CA59 /* fengya_ztt_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = fengya_ztt_fu.bundle; sourceTree = "<group>"; };
+		0B27A10B218AAF9E00E0CA59 /* hudie_lm_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = hudie_lm_fu.bundle; sourceTree = "<group>"; };
+		0B27A10C218AAF9E00E0CA59 /* juanhuzi_lm_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = juanhuzi_lm_fu.bundle; sourceTree = "<group>"; };
+		0B27A10D218AAF9E00E0CA59 /* mask_hat.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = mask_hat.bundle; sourceTree = "<group>"; };
+		0B27A10E218AAF9E00E0CA59 /* touhua_ztt_fu.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = touhua_ztt_fu.bundle; sourceTree = "<group>"; };
+		0B27A10F218AAF9E00E0CA59 /* yazui.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = yazui.bundle; sourceTree = "<group>"; };
+		0B27A110218AAF9E00E0CA59 /* yuguan.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = yuguan.bundle; sourceTree = "<group>"; };
 		2E48E32A1EB34C8A00C096C9 /* CNCLayeredMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNCLayeredMenuViewController.h; sourceTree = "<group>"; };
 		2E48E32B1EB34C8A00C096C9 /* CNCLayeredMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CNCLayeredMenuViewController.m; sourceTree = "<group>"; };
 		2E48E32D1EB34C8A00C096C9 /* CNCVideoLayeredViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CNCVideoLayeredViewController.h; sourceTree = "<group>"; };
@@ -456,6 +453,9 @@
 		9CA381FB1CEDF7FC008FC924 /* icon_152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_152.png; sourceTree = "<group>"; };
 		9CA381FC1CEDF7FC008FC924 /* icon_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_180.png; sourceTree = "<group>"; };
 		9CA3820D1CEDF91B008FC924 /* CNCMobStreamFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CNCMobStreamFramework.framework; path = ../CNCRelease/CNCMobStreamFramework.framework; sourceTree = "<group>"; };
+		E38BB6C8243EBBB80013BA99 /* libfuai.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfuai.a; path = "CNCMobStreamLibDemo/FaceUnity/FaceUnity-SDK-iOS/libfuai.a"; sourceTree = SOURCE_ROOT; };
+		E38BB6CB243EBE010013BA99 /* tongue.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = tongue.bundle; sourceTree = "<group>"; };
+		E38BB6CC243EBE010013BA99 /* ai_face_processor.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = ai_face_processor.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -548,6 +548,7 @@
 				9CA381E01CEDF29B008FC924 /* libbz2.tbd in Frameworks */,
 				9CA381E71CEDF29B008FC924 /* CFNetwork.framework in Frameworks */,
 				9CA381E51CEDF29B008FC924 /* OpenGLES.framework in Frameworks */,
+				E38BB6C9243EBBB80013BA99 /* libfuai.a in Frameworks */,
 				9CA381E31CEDF29B008FC924 /* CoreGraphics.framework in Frameworks */,
 				9CA381DF1CEDF29B008FC924 /* UIKit.framework in Frameworks */,
 				9CA381DC1CEDF29B008FC924 /* MediaPlayer.framework in Frameworks */,
@@ -575,6 +576,7 @@
 			children = (
 				0B27A0FB218AAF9E00E0CA59 /* Headers */,
 				0B27A0FE218AAF9E00E0CA59 /* libnama.a */,
+				E38BB6C8243EBBB80013BA99 /* libfuai.a */,
 				0B27A0FF218AAF9E00E0CA59 /* release_note.txt */,
 				0B27A100218AAF9E00E0CA59 /* Resources */,
 			);
@@ -593,10 +595,8 @@
 		0B27A100218AAF9E00E0CA59 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				0B27A101218AAF9E00E0CA59 /* anim_model.bundle */,
-				0B27A102218AAF9E00E0CA59 /* ardata_ex.bundle */,
+				E38BB6CA243EBE010013BA99 /* AI_model */,
 				0B27A103218AAF9E00E0CA59 /* face_beautification.bundle */,
-				0B27A104218AAF9E00E0CA59 /* fxaa.bundle */,
 				0B27A105218AAF9E00E0CA59 /* v3.bundle */,
 			);
 			path = Resources;
@@ -848,6 +848,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E38BB6CA243EBE010013BA99 /* AI_model */ = {
+			isa = PBXGroup;
+			children = (
+				E38BB6CB243EBE010013BA99 /* tongue.bundle */,
+				E38BB6CC243EBE010013BA99 /* ai_face_processor.bundle */,
+			);
+			path = AI_model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -962,6 +971,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1075,27 +1085,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B27A113218AAF9E00E0CA59 /* anim_model.bundle in Resources */,
 				75FA11BF200DA4AD0092BB44 /* info_NewInterface.plist in Resources */,
 				9CA382071CEDF7FC008FC924 /* icon_120.png in Resources */,
 				9CA382081CEDF7FC008FC924 /* icon_144.png in Resources */,
+				E38BB6CE243EBE010013BA99 /* ai_face_processor.bundle in Resources */,
 				0B27A11E218AAF9E00E0CA59 /* touhua_ztt_fu.bundle in Resources */,
 				75B46A2F1E52EA9D00034A8F /* watermark.png in Resources */,
 				9CA382041CEDF7FC008FC924 /* icon_80.png in Resources */,
 				9CA381B91CEDF0BE008FC924 /* LaunchScreen.storyboard in Resources */,
 				0B27A11D218AAF9E00E0CA59 /* mask_hat.bundle in Resources */,
 				9CA381FF1CEDF7FC008FC924 /* icon_50.png in Resources */,
-				0B27A116218AAF9E00E0CA59 /* fxaa.bundle in Resources */,
 				9CA3820A1CEDF7FC008FC924 /* icon_180.png in Resources */,
 				9CA381FD1CEDF7FC008FC924 /* icon_29.png in Resources */,
 				9CA382061CEDF7FC008FC924 /* icon_114.png in Resources */,
 				9CA382051CEDF7FC008FC924 /* icon_100.png in Resources */,
 				0B27A112218AAF9E00E0CA59 /* release_note.txt in Resources */,
+				E38BB6CD243EBE010013BA99 /* tongue.bundle in Resources */,
 				9CA382011CEDF7FC008FC924 /* icon_58.png in Resources */,
 				75FA11C0200DA4AD0092BB44 /* info_FullSDK.plist in Resources */,
 				9CA382001CEDF7FC008FC924 /* icon_57.png in Resources */,
 				0B27A11A218AAF9E00E0CA59 /* fengya_ztt_fu.bundle in Resources */,
-				0B27A114218AAF9E00E0CA59 /* ardata_ex.bundle in Resources */,
 				75084B211E1CF270002D8043 /* Default-568h@2x.png in Resources */,
 				2E7063B91EA626AC00ADC2D6 /* ProxyConfigViewController.xib in Resources */,
 				0B27A115218AAF9E00E0CA59 /* face_beautification.bundle in Resources */,
@@ -1134,7 +1143,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#!/bin/sh\ncd CNCMobStreamLibDemo/FaceUnity/FaceUnity-SDK-iOS\nfilename=libnama.a\nzipname=libnama.zip\nmdcode=$(md5 $filename)\n\n#如果md5验证失败，且libnama.zip存在,则直接解压\nif ! [ ${mdcode##*=}x = \"013defd8ecaf81c7158c97ad4d63ba6d\"x ] && [ -f \"$zipname\" ];\nthen\nrm -f $filename\nunzip $zipname\nmdcode=$(md5 $filename)\n\nif [ ${mdcode##*=}x = \"013defd8ecaf81c7158c97ad4d63ba6d\"x ]; then\necho \"ssss\"\nrm -f $zipname\nelse\necho \"fffff\"\nrm -f $filename\nfi\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#!/bin/sh\ncd CNCMobStreamLibDemo/FaceUnity/FaceUnity-SDK-iOS\nfilename=libnama.a\nzipname=libnama.zip\n\nfilename2=libfuai.a\nzipname2=libfuai.zip\nmdcode=$(md5 $filename)\n\nif [ -f \"$zipname\" ];\nthen\nrm -f $filename\nunzip $zipname\nrm -f $zipname\n\nrm -f $filename2\nunzip $zipname2\nrm -f $zipname2\nfi\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1440,7 +1449,7 @@
 					"$(inherited)",
 					./../CNCSenseMeEffects/libSticker,
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chinanetcenter.CADmobstream;
 				PRODUCT_MODULE_NAME = "网宿推流";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1477,7 +1486,7 @@
 					"$(inherited)",
 					./../CNCSenseMeEffects/libSticker,
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chinanetcenter.CADmobstream;
 				PRODUCT_MODULE_NAME = "网宿推流";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1593,7 +1602,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/CNCMobStreamLibDemo/FaceUnity/FaceUnity-SDK-iOS",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chinanetcenter.CADmobstream;
 				PRODUCT_MODULE_NAME = "网宿推流";
 				PRODUCT_NAME = "网宿推流";
@@ -1626,7 +1635,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/CNCMobStreamLibDemo/FaceUnity/FaceUnity-SDK-iOS",
 				);
-				OTHER_LDFLAGS = "-all_load";
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chinanetcenter.CADmobstream;
 				PRODUCT_MODULE_NAME = "网宿推流";
 				PRODUCT_NAME = "网宿推流";
