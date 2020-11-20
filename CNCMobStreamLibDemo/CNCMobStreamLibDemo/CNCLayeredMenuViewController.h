@@ -13,11 +13,13 @@
 @interface CNCLayeredMenuViewController : NewInfrastructureViewController
 #else
 #import "InfrastructureViewController.h"
-@interface CNCLayeredMenuViewController : InfrastructureViewController
+@interface CNCLayeredMenuViewController : InfrastructureViewController {
+    
+}
+
 #endif
 
-
-
+@property (nonatomic) BOOL is_fu;
 
 
 @end

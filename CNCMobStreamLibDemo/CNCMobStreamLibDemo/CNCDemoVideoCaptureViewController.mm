@@ -1001,9 +1001,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-        
-        [self.src_input stop_push];
-        
+        [self.src_input stop_push];        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self stop_capture];
             [progressHud_ hide:NO];
@@ -1851,10 +1849,27 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
     if ([captureOutput isKindOfClass:[AVCaptureVideoDataOutput class]]) {
+    #ifdef kAppCustom
+        //客户自定义美颜
+        //CMSampleBufferRef要转CVPixelBufferRef 或者转普通内存块buf
+        //请参考本类中的do_with_frame_RGBA 和 do_with_frame_YUV函数
+        CVPixelBufferRef *pix = NULL;
+        pix = [客户的 美颜代码];
+        CNCENM_Buf_Format format = pix的格式;//一般就那几种
+        
+        //编码+推流
+        [self.src_input send_frame_pixelBufferRef:pix format:(CNCENM_Buf_Format)format time_stamp:[[NSDate date] timeIntervalSince1970]];
+        //预览
+        [self.displayer processVideoImageBuffer:pix];
+                    
+    #else
 
         if (self.new_format_input) {
             CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+
+
             [self.src_input send_frame_pixelBufferRef:imageBuffer format:self.pixel_format_type time_stamp:[[NSDate date] timeIntervalSince1970]];
+
             
         } else {
             //        //1 I420  2 NV12 3 NV21 4 RGBA
@@ -1869,6 +1884,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             }
         }
         [self.displayer processVideoSampleBuffer:sampleBuffer];
+    #endif
     }
 }
 

@@ -31,7 +31,12 @@
 @property (nonatomic) NSInteger def_width;
 @property (nonatomic) NSInteger def_height;
 
-@property (nonatomic, retain) UISwitch *socksSwitch;
+@property (nonatomic, retain) UISwitch *socketSwitch;
+
+
+//镜像设置
+@property (nonatomic) NSInteger cur_mirror_idx;
+@property (nonatomic, retain) NSArray *array_mirror;
 
 
 @end

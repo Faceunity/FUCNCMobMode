@@ -100,9 +100,19 @@
 //    fy += 60;
     
     {
+        UILabel *label = [[[UILabel alloc] init] autorelease];
+        label.frame = CGRectMake(0, fy, screen_w, 11);;
+        label.layer.cornerRadius = 5;
+        label.font = [UIFont systemFontOfSize:10];
+        label.backgroundColor = [UIColor grayColor];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.text = @"SDK完整封装采集编码推流";
+        [self.view addSubview:label];
+        
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [btn addTarget:self action:@selector(actionRecordTest:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake((screen_w-200)/2, fy, 200, 35);
+        btn.frame = CGRectMake((screen_w-200)/2, fy+9, 200, 35);
         [btn setTitle:@"推流测试" forState:UIControlStateNormal];
         [self.view addSubview:btn];
         
@@ -111,26 +121,71 @@
     
     fy += 50;
     {
+        UILabel *label = [[[UILabel alloc] init] autorelease];
+        label.frame = CGRectMake(0, fy, screen_w, 11);;
+        label.layer.cornerRadius = 5;
+        label.font = [UIFont systemFontOfSize:10];
+        label.backgroundColor = [UIColor grayColor];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.text = @"APP自定义采集+SDK编码推流";
+        [self.view addSubview:label];
+        
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [btn addTarget:self action:@selector(actionLayeredTest:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake((screen_w-200)/2, fy, 200, 35);
+        btn.frame = CGRectMake((screen_w-200)/2, fy+9, 200, 35);
         [btn setTitle:@"分层测试" forState:UIControlStateNormal];
         [self.view addSubview:btn];
         
+        
         //        fy += 50;
     }
-    fy += 50;
+    fy += 60;
     {
+        
+        UILabel *label = [[[UILabel alloc] init] autorelease];
+        label.frame = CGRectMake(0, fy, screen_w, 11);;
+        label.layer.cornerRadius = 5;
+        label.font = [UIFont systemFontOfSize:10];
+        label.backgroundColor = [UIColor grayColor];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.text = @"采集+编码+推流三层均可自定义";
+        [self.view addSubview:label];
+        
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [btn addTarget:self action:@selector(actionCaptureTest:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake((screen_w-200)/2, fy, 200, 35);
+        btn.frame = CGRectMake((screen_w-200)/2, fy+9, 200, 35);
         [btn setTitle:@"分层采集" forState:UIControlStateNormal];
         [self.view addSubview:btn];
+        
+        
         
         //        fy += 50;
     }
     
     fy += 50;
+    
+#ifdef CNC_DEMO_FU
+    {
+        UILabel *label = [[[UILabel alloc] init] autorelease];
+        label.frame = CGRectMake(0, fy, screen_w, 11);;
+        label.layer.cornerRadius = 5;
+        label.font = [UIFont systemFontOfSize:10];
+        label.backgroundColor = [UIColor grayColor];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.text = @"FU美颜 + 采集+编码+推流三层均可自定义";
+        [self.view addSubview:label];
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [btn addTarget:self action:@selector(actionFUTest:) forControlEvents:UIControlEventTouchUpInside];
+        btn.frame = CGRectMake((screen_w-200)/2, fy+9, 200, 35);
+        [btn setTitle:@"FU测试" forState:UIControlStateNormal];
+        [self.view addSubview:btn];
+    }
+    fy += 50;
+#endif
    
     fy = [self setup_loader_info:fy view:self.view];
     {
@@ -151,6 +206,24 @@
 
     }
     
+    [self checkPermission];
+    
+}
+
+- (void)checkPermission {
+    AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (videoAuthStatus == AVAuthorizationStatusNotDetermined) {// 未询问用户是否授权
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            NSLog(@"requestAccessForMediaTypeVideo granted:%@", @(granted));
+            
+            AVAuthorizationStatus audioAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+            if (audioAuthStatus == AVAuthorizationStatusNotDetermined) {// 未询问用户是否授权
+                [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
+                    NSLog(@"requestAccessForMediaTypeAudio granted:%@", @(granted));
+                }];
+            }
+        }];
+    }
 }
 
 //- (void)actionPlayTest:(UIButton*)btn {
@@ -173,6 +246,13 @@
     select_index = 2;
     [self actionAuthClick];
 }
+
+- (void)actionFUTest:(UIButton *)btn {
+    select_index = 3;
+    [self actionAuthClick];
+}
+
+
 - (void)actionAuthClick {
     if (self.isAuth) {
         if (select_index == 0) {
@@ -181,43 +261,45 @@
         } else if (select_index == 1) {
             CNCDemoVideoCaptureMenuViewController *vc = [[[CNCDemoVideoCaptureMenuViewController alloc] init] autorelease];
             [self.navigationController pushViewController:vc animated:YES];
-        } else {
+        } else if (select_index == 2) {
             CNCLayeredMenuViewController *vc = [[[CNCLayeredMenuViewController alloc] init] autorelease];
 #ifdef CNC_NewInterface
 #else
             vc.show_the_third_sdk = YES;
 #endif
             [self.navigationController pushViewController:vc animated:YES];
+        } else if (select_index == 3) {
+            CNCLayeredMenuViewController *vc = [[[CNCLayeredMenuViewController alloc] init] autorelease];
+            vc.is_fu = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        } else {
+            //do nothing
         }
 //        CNCRecorderMenuViewController *vc = [[[CNCRecorderMenuViewController alloc] init] autorelease];
         
 //        [self.navigationController pushViewController:vc animated:YES];
     } else {
         
-//        NSString *app_id = [[NSUserDefaults standardUserDefaults] objectForKey:@"CNCMobSteamSDK_App_ID"];
-//        NSString *auth_key = [[NSUserDefaults standardUserDefaults] objectForKey:@"CNCMobSteamSDK_Auth_Key"];
-//
-//        UIAlertView* alertView = [[[UIAlertView alloc] initWithTitle:@"请输入鉴权信息" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil] autorelease];
-//        [alertView setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
-//
-//        UITextField* appid_textfield = [alertView textFieldAtIndex:0];
-//        UITextField* auth_key_textfield = [alertView textFieldAtIndex:1];
-//
-//        appid_textfield.placeholder = @"Please enter your App ID";
-//        auth_key_textfield.placeholder = @"Please enter your Auth Key";
-//
-//        appid_textfield.secureTextEntry = NO;
-//        auth_key_textfield.secureTextEntry = NO;
-//
-//        appid_textfield.text = app_id;
-//        auth_key_textfield.text = auth_key;
-//
-//        [alertView show];
-//        alertView = nil;
+        NSString *app_id = [[NSUserDefaults standardUserDefaults] objectForKey:@"CNCMobSteamSDK_App_ID"];
+        NSString *auth_key = [[NSUserDefaults standardUserDefaults] objectForKey:@"CNCMobSteamSDK_Auth_Key"];
         
-        NSLog(@"--------- worinima ~");
-        [self do_auth_with_id:@"f3pigohj" key:@"D73CB42BBA3B47B2AD1B1AF5B2ACFD06"];
+        UIAlertView* alertView = [[[UIAlertView alloc] initWithTitle:@"请输入鉴权信息" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil] autorelease];
+        [alertView setAlertViewStyle:UIAlertViewStyleLoginAndPasswordInput];
         
+        UITextField* appid_textfield = [alertView textFieldAtIndex:0];
+        UITextField* auth_key_textfield = [alertView textFieldAtIndex:1];
+        
+        appid_textfield.placeholder = @"Please enter your App ID";
+        auth_key_textfield.placeholder = @"Please enter your Auth Key";
+        
+        appid_textfield.secureTextEntry = NO;
+        auth_key_textfield.secureTextEntry = NO;
+        
+        appid_textfield.text = app_id;
+        auth_key_textfield.text = auth_key;
+        
+        [alertView show];
+        alertView = nil;
     }
 }
 
@@ -270,16 +352,22 @@
                 if (select_index == 0) {
                     CNCRecorderMenuViewController *vc = [[[CNCRecorderMenuViewController alloc] init] autorelease];
                     [self.navigationController pushViewController:vc animated:YES];
-                } else if (select_index == 1){
+                } else if (select_index == 1) {
                     CNCDemoVideoCaptureMenuViewController *vc = [[[CNCDemoVideoCaptureMenuViewController alloc] init] autorelease];
                     [self.navigationController pushViewController:vc animated:YES];
-                } else {
+                } else if (select_index == 2) {
                     CNCLayeredMenuViewController *vc = [[[CNCLayeredMenuViewController alloc] init] autorelease];
 #ifdef CNC_NewInterface
 #else
             vc.show_the_third_sdk = YES;
 #endif
                     [self.navigationController pushViewController:vc animated:YES];
+                } else if (select_index == 3) {
+                    CNCLayeredMenuViewController *vc = [[[CNCLayeredMenuViewController alloc] init] autorelease];
+                    vc.is_fu = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                } else {
+                    //do nothing
                 }
                 
                 

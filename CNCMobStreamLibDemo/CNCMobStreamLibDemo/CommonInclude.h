@@ -9,28 +9,28 @@
 #ifndef CommonInclude_h
 #define CommonInclude_h
 
-#ifdef kCNC_Demo_Inner
-
-#import "CNCMobComDef.h"
-#import "CNCMobStruct.h"
-#import "CNCMobStreamSDK.h"
-#import "CNCVideoSourceInput.h"
-#import "CNCComDelegateDef.h"
-
-
-#import "CNCCaptureVideoDataManager.h"
-#import "CNCMobStreamVideoDisplayer.h"
-#import "CNCMobStreamTimeStampGenerator.h"
-#import "CNCMobStreamAudioEngine.h"
-#import "CNCMobStreamRtmpSender.h"
-#import "CNCMobStreamVideoEncoder.h"
-#import "CNCRecordFileSeesionManager.h"
-
-#else
+//#ifdef kCNC_Demo_Inner
+//
+//#import "CNCMobComDef.h"
+//#import "CNCMobStruct.h"
+//#import "CNCMobStreamSDK.h"
+//#import "CNCVideoSourceInput.h"
+//#import "CNCComDelegateDef.h"
+//
+//
+//#import "CNCCaptureVideoDataManager.h"
+//#import "CNCMobStreamVideoDisplayer.h"
+//#import "CNCMobStreamTimeStampGenerator.h"
+//#import "CNCMobStreamAudioEngine.h"
+//#import "CNCMobStreamRtmpSender.h"
+//#import "CNCMobStreamVideoEncoder.h"
+//#import "CNCRecordFileSeesionManager.h"
+//
+//#else
 
 #import <CNCMobStreamFramework/CNCMobStreamFramework.h>
 
-#endif
+//#endif
 
 
 

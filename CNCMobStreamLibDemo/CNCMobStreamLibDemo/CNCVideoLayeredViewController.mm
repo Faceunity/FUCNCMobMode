@@ -16,13 +16,6 @@
 #import <OpenGLES/ES2/glext.h>
 #import "CNCDemoFunc.h"
 
-
-/**------   FaceUnity   ------**/
-#import "FUManager.h"
-#import <FUAPIDemoBar/FUAPIDemoBar.h>
-
-
-
 #define LIGHTGRAY [UIColor colorWithWhite:212.0/255 alpha:1.f]
 #define SELECTEDCOLOR [UIColor colorWithRed:252.f/255 green:51.f/255 blue:66.f/255 alpha:1.f]
 #define STREAM_NAME_CACHE [[NSUserDefaults standardUserDefaults]stringForKey:@"stream_name_cache"]
@@ -36,9 +29,7 @@ unsigned long long mGetTickCountLayeredViewController()
     }
     return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
-@interface CNCVideoLayeredViewController () <UIGestureRecognizerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,CNCMobStreamAudioEngineDelegate, CNCMobStreamVideoEncoderDelegate, CNCCaptureVideoDataManagerDelegate, CNCMobStreamRtmpSenderDelegate,UITableViewDataSource,UITableViewDelegate,
-FUAPIDemoBarDelegate
-> {
+@interface CNCVideoLayeredViewController () <UIGestureRecognizerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,CNCMobStreamAudioEngineDelegate, CNCMobStreamVideoEncoderDelegate, CNCCaptureVideoDataManagerDelegate, CNCMobStreamRtmpSenderDelegate,UITableViewDataSource,UITableViewDelegate> {
     CGFloat screen_w_;
     CGFloat screen_h_;
     
@@ -190,11 +181,6 @@ FUAPIDemoBarDelegate
 //record code UI
 @property (nonatomic, retain) UITableView *record_code_tableView;
 @property (nonatomic, retain) __block NSMutableArray *record_code_data_array;
-
-
-/**------   FaceUnity   ------**/
-@property (nonatomic, strong) FUAPIDemoBar *demoBar ;
-
 @end
 
 @implementation CNCVideoLayeredViewController
@@ -211,8 +197,8 @@ FUAPIDemoBarDelegate
     [self init_para];
     ///添加通知
     [self addObservers];
-//    ///添加手势
-//    [self addGestureRecognizer];
+    ///添加手势
+    [self addGestureRecognizer];
     
     
     [self initialMobStreamTimeStampGenerator];
@@ -227,84 +213,7 @@ FUAPIDemoBarDelegate
     ///初始化界面UI
     [self setup_view];
     
-    
-    
-    
-/**------   FaceUnity   ------**/
-    [[FUManager shareManager] loadItems];
-    [self.view addSubview:self.demoBar ];
-/**------   FaceUnity   ------**/
 }
-
-/**------   FaceUnity   ------**/
--(FUAPIDemoBar *)demoBar {
-    if (!_demoBar) {
-        
-        _demoBar = [[FUAPIDemoBar alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 240, self.view.frame.size.width, 164)];
-        
-        _demoBar.itemsDataSource = [FUManager shareManager].itemsDataSource;
-        _demoBar.selectedItem = [FUManager shareManager].selectedItem ;
-        
-        _demoBar.filtersDataSource = [FUManager shareManager].filtersDataSource ;
-        _demoBar.beautyFiltersDataSource = [FUManager shareManager].beautyFiltersDataSource ;
-        _demoBar.filtersCHName = [FUManager shareManager].filtersCHName ;
-        _demoBar.selectedFilter = [FUManager shareManager].selectedFilter ;
-        [_demoBar setFilterLevel:[FUManager shareManager].selectedFilterLevel forFilter:[FUManager shareManager].selectedFilter] ;
-        
-        _demoBar.skinDetectEnable = [FUManager shareManager].skinDetectEnable;
-        _demoBar.blurShape = [FUManager shareManager].blurShape ;
-        _demoBar.blurLevel = [FUManager shareManager].blurLevel ;
-        _demoBar.whiteLevel = [FUManager shareManager].whiteLevel ;
-        _demoBar.redLevel = [FUManager shareManager].redLevel;
-        _demoBar.eyelightingLevel = [FUManager shareManager].eyelightingLevel ;
-        _demoBar.beautyToothLevel = [FUManager shareManager].beautyToothLevel ;
-        _demoBar.faceShape = [FUManager shareManager].faceShape ;
-        
-        _demoBar.enlargingLevel = [FUManager shareManager].enlargingLevel ;
-        _demoBar.thinningLevel = [FUManager shareManager].thinningLevel ;
-        _demoBar.enlargingLevel_new = [FUManager shareManager].enlargingLevel_new ;
-        _demoBar.thinningLevel_new = [FUManager shareManager].thinningLevel_new ;
-        _demoBar.jewLevel = [FUManager shareManager].jewLevel ;
-        _demoBar.foreheadLevel = [FUManager shareManager].foreheadLevel ;
-        _demoBar.noseLevel = [FUManager shareManager].noseLevel ;
-        _demoBar.mouthLevel = [FUManager shareManager].mouthLevel ;
-        
-        _demoBar.delegate = self;
-    }
-    return _demoBar ;
-}
-
-/**      FUAPIDemoBarDelegate       **/
-
-- (void)demoBarDidSelectedItem:(NSString *)itemName {
-    [[FUManager shareManager] loadItem:itemName];
-}
-
-- (void)demoBarBeautyParamChanged {
-    
-    [FUManager shareManager].skinDetectEnable = _demoBar.skinDetectEnable;
-    [FUManager shareManager].blurShape = _demoBar.blurShape;
-    [FUManager shareManager].blurLevel = _demoBar.blurLevel ;
-    [FUManager shareManager].whiteLevel = _demoBar.whiteLevel;
-    [FUManager shareManager].redLevel = _demoBar.redLevel;
-    [FUManager shareManager].eyelightingLevel = _demoBar.eyelightingLevel;
-    [FUManager shareManager].beautyToothLevel = _demoBar.beautyToothLevel;
-    [FUManager shareManager].faceShape = _demoBar.faceShape;
-    [FUManager shareManager].enlargingLevel = _demoBar.enlargingLevel;
-    [FUManager shareManager].thinningLevel = _demoBar.thinningLevel;
-    [FUManager shareManager].enlargingLevel_new = _demoBar.enlargingLevel_new;
-    [FUManager shareManager].thinningLevel_new = _demoBar.thinningLevel_new;
-    [FUManager shareManager].jewLevel = _demoBar.jewLevel;
-    [FUManager shareManager].foreheadLevel = _demoBar.foreheadLevel;
-    [FUManager shareManager].noseLevel = _demoBar.noseLevel;
-    [FUManager shareManager].mouthLevel = _demoBar.mouthLevel;
-    
-    [FUManager shareManager].selectedFilter = _demoBar.selectedFilter ;
-    [FUManager shareManager].selectedFilterLevel = _demoBar.selectedFilterLevel;
-}
-/**------   FaceUnity   ------**/
-
-
 - (void)init_capture_manager {
     while (self.has_video) {
         
@@ -1721,13 +1630,8 @@ FUAPIDemoBarDelegate
                 //美颜
                 [self.view addSubview:self.beauty_view];
                 break;
-            case 2:
-                //水印
-                
-                [self.view addSubview:self.overlay_mask_view];
-                break;
-          
-            case 3://美声
+            
+            case 2://美声
             {
                 self.human_slider.value = [self.audioEng currentHumanVolume];
                 self.music_slider.value = [self.audioEng currentMusicVolume];
@@ -1764,6 +1668,8 @@ FUAPIDemoBarDelegate
 }
 #pragma mark -水印操作
 - (BOOL)setLogo_overlay_mask {
+    return NO;
+    
     UIImageView *iv = [[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)] autorelease];
     iv.image = [UIImage imageNamed:@"watermark.png"];
     
@@ -1780,10 +1686,12 @@ FUAPIDemoBarDelegate
         [self.displayer overlay_mask:iv rect:scale_rect];
     
     
-    return [self.capture_manager overlayMaskWithObject:iv rect:scale_rect block:block];
+//    return [self.capture_manager overlayMaskWithObject:iv rect:scale_rect block:block];
 
 }
 - (BOOL)setLabel_overlay_mask {
+    
+    return NO;
     
     UILabel *time_label = [[[UILabel alloc] initWithFrame:CGRectMake(10,20, 0, 0)] autorelease];
     
@@ -1798,6 +1706,7 @@ FUAPIDemoBarDelegate
     void  (^block)() = ^{
         NSString *str = [[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:[NSDate date]]] autorelease];
         time_label.text = str;
+        
     };
     
     CGFloat scale_x = 0.05;
@@ -1810,7 +1719,7 @@ FUAPIDemoBarDelegate
         [self.displayer overlay_mask:time_label rect:scale_rect];
     
     
-    return [self.capture_manager overlayMaskWithObject:time_label rect:scale_rect block:block];
+//    return [self.capture_manager overlayMaskWithObject:time_label rect:scale_rect block:block];
     
 }
 #pragma mark 镜像相关
@@ -1876,7 +1785,7 @@ FUAPIDemoBarDelegate
         return;
     }
     
-    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"美颜" message:@"样式" delegate:self cancelButtonTitle:@"关闭" otherButtonTitles:@"美颜",@"水印",@"美声", nil] autorelease];
+    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"美颜" message:@"样式" delegate:self cancelButtonTitle:@"关闭" otherButtonTitles:@"美颜", @"美声", nil] autorelease];
     alertView.tag = 601;
     [alertView show];
     
@@ -2481,10 +2390,6 @@ FUAPIDemoBarDelegate
     self.sei_questions_title_array = nil;
     self.sei_json_dict = nil;
     [super dealloc];
-    
-/**------   FaceUnity   ------**/
-    [[FUManager shareManager] destoryItems];
-/**------   FaceUnity   ------**/
 }
 
 #pragma mark 判断地址栏是否正确
@@ -3360,8 +3265,8 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 }
 
 #pragma mark 采集输出
-- (void)overlayMask_buf:(void *)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(long long)time_stamp {
-    //水印输出
+- (void)do_encoder_normal:(void *)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(long long)time_stamp {
+    
     if (self.is_pushing) {
         if (self.videoEncoder) {
             if ([self.record_manager is_doing_store] && store_type == CNCRecordVideoType_GIF){
@@ -3373,19 +3278,20 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 }
 
 - (void)video_capture_buf:(void *)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(long long)ts {
+
     if (!self.displayer) {
         if (init_display_wait_count==0) {
             init_display_wait_count ++;
             [self init_display];
         }
     }
-
+    
     pixelbufferAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSDictionary dictionary], kCVPixelBufferIOSurfacePropertiesKey,
                              nil];
-
+    
     if (format == CNCENM_buf_format_BGRA) {
-
+        //目前此回调只有这种格式
         size_t len = pix_width * pix_height;
         GLubyte *imageData = NULL;
         imageData = (GLubyte *)malloc(len);
@@ -3393,66 +3299,30 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             return;
         }
         memcpy(imageData, buf, len);
-
+        
         CVPixelBufferRef pixelBuffer = NULL;
-
+        
         CVPixelBufferCreateWithBytes(kCFAllocatorDefault, pix_width/4, pix_height, kCVPixelFormatType_32BGRA, imageData
                                      , pix_width, NULL, NULL, (__bridge CFDictionaryRef)pixelbufferAttributes, &pixelBuffer);
-        //操作数据翻转镜像
-//        CVPixelBufferRef mirror_pix =  [self mirror_pixelbuffer_BGRA:pixelBuffer];
-//        CVPixelBufferRelease (pixelBuffer);
-//        pixelBuffer = mirror_pix;
+    
         CVPixelBufferLockBaseAddress(pixelBuffer,0);
-
+        
         if (!is_pause_opengl_view){
-
-
-//                if (_ovelay_mask_index != 0) {
-                    CMTime time = kCMTimeInvalid;
-                    [self.capture_manager overlay_pixelbuffer:pixelBuffer time:time time_stamp:(int)ts];
-//                } else {
-//                    [self frame_RGBA:pixelBuffer time_stamp:(long)ts];
-//                }
-
-            
-            
-            [[FUManager shareManager] renderItemsToPixelBuffer:pixelBuffer];
-            
-                [self.displayer processVideoImageBuffer:pixelBuffer];
-
+            [self.displayer processVideoImageBuffer:pixelBuffer];
         }
-
+        
         CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
         CVPixelBufferRelease(pixelBuffer);
-
+        
         if (imageData) {
             free(imageData);
         }
-
+        
     } else {
-        int imageWidth = pix_width;
-        int imageHeight = pix_height*2/3;
-        CVPixelBufferRef pixelBuffer = [self copyDataFromBuffer:buf toYUVPixelBufferWithWidth:imageWidth Height:imageHeight];
-        //操作数据翻转镜像
-//        CVPixelBufferRef mirror_pixelbuffer = [self mirror_pixelbuffer_YUV:pixelBuffer mirror:YES];
-//        CVPixelBufferRelease(pixelBuffer);
-//        pixelBuffer = mirror_pixelbuffer;
-        CVPixelBufferLockBaseAddress(pixelBuffer,0);
-
-//            if (_ovelay_mask_index != 0) {
-                CMTime time = kCMTimeInvalid;
-                [self.capture_manager overlay_pixelbuffer:pixelBuffer time:time time_stamp:(int)ts];
-//            } else {
-//                if (self.is_pushing && self.videoEncoder) {
-//                    [self.videoEncoder send_frame_pixelBufferRef:pixelBuffer format:CNCENM_buf_format_I420 time_stamp:ts];
-//                }
-//            }
-            [self.displayer processVideoImageBuffer:pixelBuffer];
-
-
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-        CVPixelBufferRelease(pixelBuffer);
+        //do nothing
     }
+    
+    [self do_encoder_normal:buf pix_width:pix_width pix_height:pix_height format:format time_stamp:ts];
     
 }
 - (void)mirror_capture_buf:(void*)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format {
@@ -3705,19 +3575,16 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     return pixelBuffer;
 }
 
-- (void)capture_sample_bufferRef_data:(CMSampleBufferRef)sample_buf time_stamp:(unsigned int)time_stamp{
-        
-    //    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sample_buf);
-    //    [self.displayer processVideoImageBuffer:pixelBuffer];
-    //    [self.displayer processVideoSampleBuffer:sample_buf];
-    
-}
-
-- (void)capture_pixel_bufferRef_data:(CVPixelBufferRef)pixelBuffer time_stamp:(unsigned int)time_stamp {
-//    [[FUManager shareManager] renderItemsToPixelBuffer:pixelBuffer];
-}
-
-
+//- (void)capture_sample_bufferRef_data:(CMSampleBufferRef)sample_buf time_stamp:(unsigned int)time_stamp{
+//        
+//    //    CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sample_buf);
+//    //    [self.displayer processVideoImageBuffer:pixelBuffer];
+//    //    [self.displayer processVideoSampleBuffer:sample_buf];
+//}
+//
+//- (void)capture_pixel_bufferRef_data:(CVPixelBufferRef)pixelBuffer time_stamp:(unsigned int)time_stamp {
+//    
+//}
 - (void)frame_RGBA:(CVImageBufferRef)imageBuffer time_stamp:(long)time_stamp {
     
     uint8_t *p_src_buf = (uint8_t*)CVPixelBufferGetBaseAddress(imageBuffer);

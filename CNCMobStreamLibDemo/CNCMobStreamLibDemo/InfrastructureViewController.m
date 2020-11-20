@@ -130,19 +130,19 @@
     self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频", nil];
     
     if (self.show_the_third_sdk) {
-#ifdef CNC_DEMO_FU
-#ifdef CNC_DEMO_ST
-        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"FU采集",@"ST采集", nil];
-#else
-        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"FU采集", nil];
-#endif
-#else
-#ifdef CNC_DEMO_ST
-        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"ST采集", nil];
-#else
-        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频", nil];
-#endif
-#endif
+//#ifdef CNC_DEMO_FU
+//#ifdef CNC_DEMO_ST
+//        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"FU采集",@"ST采集", nil];
+//#else
+//        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"FU采集", nil];
+//#endif
+//#else
+//#ifdef CNC_DEMO_ST
+//        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频",@"ST采集", nil];
+//#else
+//        self.array_camera_side = [NSArray arrayWithObjects:@"前置", @"后置", @"纯音频", nil];
+//#endif
+//#endif
     }
     
     self.array_camera_direction = [NSArray arrayWithObjects:@"竖屏", @"横屏", nil];

@@ -63,13 +63,20 @@
     if (!self.stream_para) {
         self.stream_para = [[[CNCVideoSourceCfg alloc] init] autorelease];
         self.capture_info = [[[CNCCaptureInfo alloc] init] autorelease];
+
+        self.is_fu = NO;
     }
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor whiteColor];
-    self.title = @"推流测试";
+    if (self.is_fu) {
+        self.title = @"FU测试";
+    } else {
+        self.title = @"分层采集";
+    }
+    
 #ifdef CNC_NewInterface
     [self set_new_interface_view];
 #else
@@ -141,9 +148,40 @@
 //                                         @(99999),
                                          
                                          nil];
+    
+    
     self.cur_idx = 0;
     
     self.cur_idx_video = 2;
+    
+    if (self.is_fu) {
+         self.array_video_resolution = [NSArray arrayWithObjects:
+//                                           @"360P 4:3",
+//                                           @"360P 16:9",
+                                           @"480P 4:3",
+                                           @"480P 16:9",
+//                                           @"540P 4:3",
+//                                           @"540P 16:9",
+                                           @"720P 4:3",
+                                           @"720P 16:9",
+        //                                   @"高级自定义",
+                                           
+                                           nil];
+            self.array_value_video_resolution = [NSArray arrayWithObjects:
+                                                 
+//                                                 @(CNCVideoResolution_360P_4_3),
+//                                                 @(CNCVideoResolution_360P_16_9),
+                                                 @(CNCVideoResolution_480P_4_3),
+                                                 @(CNCVideoResolution_480P_16_9),
+//                                                 @(CNCVideoResolution_540P_4_3),
+//                                                 @(CNCVideoResolution_540P_16_9),
+                                                 @(CNCVideoResolution_720P_4_3),
+                                                 @(CNCVideoResolution_720P_16_9),
+        //                                         @(99999),
+                                                 
+                                                 nil];
+        self.cur_idx_video = 0;
+    }
     
     CGFloat height = 40;
     
@@ -394,53 +432,83 @@
     self.capture_info.format_type = self.cur_idx_format;
     self.capture_info.encoder_type = self.encoder_type;
     
+    if (self.came_sel_type == 2) {
+        self.stream_para.has_video = NO;
+    }
     
-     if (self.came_sel_type == 3) {
+    if (self.is_fu) {
 #ifdef CNC_DEMO_FU
         CNCVideoLayeredViewControllerFU *vc = [[[CNCVideoLayeredViewControllerFU alloc] init] autorelease];
-         vc.stream_cfg = self.stream_para;
-         vc.capture_info = self.capture_info;
-         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
-         [self presentViewController:vc animated:YES completion:^(){
-             
-         }];
-#else
-    #ifdef CNC_DEMO_ST
-        CNCVideoLayeredViewControllerST *vc = [[[CNCVideoLayeredViewControllerST alloc] init] autorelease];
-         vc.stream_cfg = self.stream_para;
-         vc.capture_info = self.capture_info;
-         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
-         [self presentViewController:vc animated:YES completion:^(){
-             
-         }];
-    #endif
-#endif
-        
-    }
-    else if (self.came_sel_type == 4) {
-#ifdef CNC_DEMO_ST
-        CNCVideoLayeredViewControllerST *vc = [[[CNCVideoLayeredViewControllerST alloc] init] autorelease];
         vc.stream_cfg = self.stream_para;
         vc.capture_info = self.capture_info;
         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vc animated:YES completion:^(){
             
         }];
 #endif
-        
     } else {
-        if (self.came_sel_type == 2) {
-            self.stream_para.has_video = NO;
-        }
-        
-       CNCVideoLayeredViewController *vc = [[[CNCVideoLayeredViewController alloc] init] autorelease];
+        CNCVideoLayeredViewController *vc = [[[CNCVideoLayeredViewController alloc] init] autorelease];
         vc.stream_cfg = self.stream_para;
         vc.capture_info = self.capture_info;
         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vc animated:YES completion:^(){
             
         }];
     }
+//    
+//    
+//     if (self.came_sel_type == 3) {
+//#ifdef CNC_DEMO_FU
+//        CNCVideoLayeredViewControllerFU *vc = [[[CNCVideoLayeredViewControllerFU alloc] init] autorelease];
+//         vc.stream_cfg = self.stream_para;
+//         vc.capture_info = self.capture_info;
+//         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+//         vc.modalPresentationStyle = UIModalPresentationFullScreen;
+//         [self presentViewController:vc animated:YES completion:^(){
+//             
+//         }];
+//#else
+//    #ifdef CNC_DEMO_ST
+//        CNCVideoLayeredViewControllerST *vc = [[[CNCVideoLayeredViewControllerST alloc] init] autorelease];
+//         vc.stream_cfg = self.stream_para;
+//         vc.capture_info = self.capture_info;
+//         vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+//         vc.modalPresentationStyle = UIModalPresentationFullScreen;
+//         [self presentViewController:vc animated:YES completion:^(){
+//             
+//         }];
+//    #endif
+//#endif
+//        
+//    }
+//    else if (self.came_sel_type == 4) {
+//#ifdef CNC_DEMO_ST
+//        CNCVideoLayeredViewControllerST *vc = [[[CNCVideoLayeredViewControllerST alloc] init] autorelease];
+//        vc.stream_cfg = self.stream_para;
+//        vc.capture_info = self.capture_info;
+//        vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+//        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+//        [self presentViewController:vc animated:YES completion:^(){
+//            
+//        }];
+//#endif
+//        
+//    } else {
+//        if (self.came_sel_type == 2) {
+//            self.stream_para.has_video = NO;
+//        }
+//        
+//       CNCVideoLayeredViewController *vc = [[[CNCVideoLayeredViewController alloc] init] autorelease];
+//        vc.stream_cfg = self.stream_para;
+//        vc.capture_info = self.capture_info;
+//        vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+//        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+//        [self presentViewController:vc animated:YES completion:^(){
+//            
+//        }];
+//    }
     
 }
 #endif
@@ -761,6 +829,7 @@
     vc.stream_cfg = self.stream_para;
     vc.capture_info = self.capture_info;
     vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:vc animated:YES completion:^(){
         
     }];
