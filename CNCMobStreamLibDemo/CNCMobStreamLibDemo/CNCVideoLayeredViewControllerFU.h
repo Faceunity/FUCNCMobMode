@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "CommonInclude.h"
 
-@interface CNCVideoLayeredViewControllerFU : UIViewController
+
+@interface CNCVideoLayeredViewControllerFU  : UIViewController  {
+    CGFloat screen_w_;
+    CGFloat screen_h_;
+}
 
 @property (nonatomic, retain) CNCVideoSourceCfg *stream_cfg;
 @property (nonatomic, retain) CNCCaptureInfo *capture_info;
 @property (nonatomic, assign) int sw_encoder_priority_type;
+
+
+
 @end

@@ -84,10 +84,5 @@ typedef struct CNCDisplayConfigs {
  */
 - (void)renderTexture:(GLuint)texture width:(int)width height:(int)height;
 
-/*! @brief 设置预览层水印
- * @param object 水印对象
- * @param scale 水印位置比例 (x,y,width,height) 范围为0~1
- * @return 设置结果
- */
-- (BOOL)overlay_mask:(UIView *)object rect:(CGRect)scale;
+
 @end

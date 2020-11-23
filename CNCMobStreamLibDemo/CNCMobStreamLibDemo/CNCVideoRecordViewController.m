@@ -10,6 +10,9 @@
 #import "CNCDemoFunc.h"
 #import "MBProgressHUD.h"
 
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/UTCoreTypes.h>
+
 #define LIGHTGRAY [UIColor colorWithWhite:212.0/255 alpha:1.f]
 #define SELECTEDCOLOR [UIColor colorWithRed:252.f/255 green:51.f/255 blue:66.f/255 alpha:1.f]
 #define STREAM_NAME_CACHE [[NSUserDefaults standardUserDefaults]stringForKey:@"stream_name_cache"]
@@ -69,6 +72,7 @@
 @property (nonatomic, retain) UIButton *torchButton;
 @property (nonatomic, retain) UIButton *closeButton;
 @property (nonatomic, retain) UIButton *beauty_btn;
+
 // 预览时支持的可设置的一些参数视图
 @property (nonatomic, retain) UIView *settingView;
 @property (nonatomic, retain) UITextView *rtmp_url_textview;
@@ -130,6 +134,10 @@
 //record code UI
 @property (nonatomic, retain) UITableView *record_code_tableView;
 @property (nonatomic, retain) __block NSMutableArray *record_code_data_array;
+
+//切换摄像头时的镜像设置
+@property (nonatomic) NSInteger cur_swap_mirror_idx;
+@property (nonatomic, retain) NSArray *array_swap_mirror;
 @end
 
 @implementation CNCVideoRecordViewController
@@ -183,8 +191,52 @@
     
     NSInteger retry_cnt = 0;
     BOOL is_camera_start = NO;
+    
+    BOOL preview_mirror = NO;
+    BOOL source_mirror = NO;
+    
+    
+    /*
+    0 - @"默认镜像设置",
+    1 - @"预览:YES 编码:YES",
+    2 - @"预览:YES 编码:NO",
+    3 - @"预览:NO 编码:NO",
+    4 - @"预览:NO 编码:YES",
+     */
+    switch (self.mirror_idx) {
+        case 1: {
+            preview_mirror = YES;
+            source_mirror = YES;
+        }
+            break;
+        case 2: {
+            preview_mirror = YES;
+            source_mirror = NO;
+        }
+            break;
+        case 3: {
+            preview_mirror = NO;
+            source_mirror = NO;
+        }
+            break;
+        case 4: {
+            preview_mirror = NO;
+            source_mirror = YES;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
     do {
-        is_camera_start = [CNCMobStreamSDK set_show_video_preview:preview];
+        
+        if (self.mirror_idx == 0) {
+            is_camera_start = [CNCMobStreamSDK set_show_video_preview:preview];
+        } else {
+            is_camera_start = [CNCMobStreamSDK set_show_video_preview:preview source_mirror:source_mirror preview_mirror:preview_mirror];
+        }
+        
         if (is_camera_start) {
             break;
         }
@@ -348,6 +400,16 @@
         [btn setImage:[UIImage imageNamed:@"ic_mode_switch_camera"] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(actionSwap:) forControlEvents:UIControlEventTouchUpInside];
         [backView addSubview:btn];
+        
+        //镜像设置
+        self.cur_swap_mirror_idx = 0;
+        self.array_swap_mirror = [NSArray arrayWithObjects:
+                             @"不改变镜像设置",
+                             @"预览:YES 编码:YES",
+                             @"预览:YES 编码:NO",
+                             @"预览:NO 编码:NO",
+                             @"预览:NO 编码:YES",
+                             nil];
     }
     
     index++;
@@ -1623,6 +1685,17 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             default:
                 break;
         }
+    }  else if (alertView.tag == 996) {
+           
+           if (buttonIndex > 0) {
+               NSString *s = [self.array_swap_mirror objectAtIndex:buttonIndex-1];
+//               UIButton *btn = [self.view viewWithTag:2006];
+//               [btn setTitle:s forState:UIControlStateNormal];
+               NSInteger new_idx = buttonIndex-1;
+               self.cur_swap_mirror_idx = new_idx;
+               
+               [self do_swap_camera];
+           }
     } else {
         
     }
@@ -1728,7 +1801,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss:SSS"];
     void  (^block)() = ^{
         NSString *str = [[[NSString alloc] initWithFormat:@"%@", [dateFormatter stringFromDate:[NSDate date]]] autorelease];
-        time_label.text = str;
+        time_label.text = str;        
     };
     
 //    CGFloat scale_x = 0.05;
@@ -2141,21 +2214,114 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
         return;
     }
     
-    [sender setEnabled:NO];
+    //MFMTEST
+//    {
+//        static int g_test = 0;
+//        g_test += 3;
+//        self.cur_swap_mirror_idx = g_test % 5;
+//        [self do_swap_camera];
+//        return;
+//    }
+    
+    
+    //初始化AlertView
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                    message:@""
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:nil];
+    //设置标题与信息，通常在使用frame初始化AlertView时使用
+    alert.title = @"选择镜像设置";
+    //    alert.message = @"AlertViewMessage";
+    
+    //这个属性继承自UIView，当一个视图中有多个AlertView时，可以用这个属性来区分
+    alert.tag = 996;
+    //只读属性，看AlertView是否可见
+    NSLog(@"%d",alert.visible);
+    //通过给定标题添加按钮
+    
+    for (NSString *s in self.array_swap_mirror) {
+        [alert addButtonWithTitle:s];
+    }
+    
+    //显示AlertView
+    [alert show];
+    [alert release];
+    
+    
+}
+
+- (void)do_swap_camera  {
+    NSString *s = [self.array_swap_mirror objectAtIndex:self.cur_swap_mirror_idx];
+    
+    UIButton *btn = [self.view viewWithTag:10001];
+    [btn setEnabled:NO];
     MBProgressHUD* progressHud_ = [[[MBProgressHUD alloc] initWithView:self.view] autorelease];
     progressHud_.removeFromSuperViewOnHide = YES;
-    progressHud_.labelText = @"正在切换摄像头...";
+    progressHud_.labelText = [NSString stringWithFormat:@"%@", s];//@"正在切换摄像头...";
     [self.view addSubview:progressHud_];
     [progressHud_ show:YES];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         
-        [CNCMobStreamSDK swap_cameras];
+        BOOL preview_mirror = NO;
+        BOOL source_mirror = NO;
+        /*
+        0 - @"默认镜像设置",
+        1 - @"预览:YES 编码:YES",
+        2 - @"预览:YES 编码:NO",
+        3 - @"预览:NO 编码:NO",
+        4 - @"预览:NO 编码:YES",
+         */
+        switch (self.cur_swap_mirror_idx) {
+            case 1: {
+                preview_mirror = YES;
+                source_mirror = YES;
+            }
+                break;
+            case 2: {
+                preview_mirror = YES;
+                source_mirror = NO;
+            }
+                break;
+            case 3: {
+                preview_mirror = NO;
+                source_mirror = NO;
+            }
+                break;
+            case 4: {
+                preview_mirror = NO;
+                source_mirror = YES;
+            }
+                break;
+                
+            default:
+                break;
+        }
+        
+        //MFM-TEST
+//        self.cur_swap_mirror_idx = 0;
+        if (self.cur_swap_mirror_idx == 0) {
+            preview_mirror = [CNCMobStreamSDK get_cur_preview_mirror];
+            source_mirror = [CNCMobStreamSDK get_cur_source_mirror];
+            [CNCMobStreamSDK swap_cameras];
+        } else {
+            [CNCMobStreamSDK swap_cameras:source_mirror preview_mirror:preview_mirror];
+        }
+        
+        {
+            NSString *info = [NSString stringWithFormat:@"预:%@ 编:%@", @(preview_mirror), @(source_mirror)];
+            NSMutableDictionary *d = [NSMutableDictionary dictionary];
+            [d setObject:@(999) forKey:@"code"];
+            [d setObject:info forKey:@"message"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kMobStreamSDKReturnCodeNotification object:d];
+        }
+        
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [progressHud_ hide:YES];
             self.torchButton.selected = NO;
-            [sender setEnabled:YES];
+            [btn setEnabled:YES];
         });
     });
 }
@@ -2397,6 +2563,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     self.sei_questions_pickView = nil;
     self.sei_questions_title_array = nil;
     self.sei_json_dict = nil;
+    self.array_swap_mirror = nil;
     [super dealloc];
 }
 
@@ -3153,6 +3320,11 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
         if ([path hasSuffix:@".jpg"]) {
             UIImage *img = [UIImage imageWithContentsOfFile:path];
             UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        } else if ([path hasSuffix:@".gif"]) {
+            NSData *data = [NSData dataWithContentsOfFile:path];
+            [self save_gif_data:data];
+        } else if ([path hasSuffix:@".flv"]) {
+            NSLog(@"flv 无法直接转存相册");
         } else {
             
             if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(path)) {
@@ -3165,6 +3337,28 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             }
         }
     });
+}
+
+- (void)save_gif_data:(NSData *)data
+{
+    ALAssetsLibrary* library = [[[ALAssetsLibrary alloc] init] autorelease];
+    NSDictionary *metadata = @{@"UTI":(__bridge NSString *)kUTTypeGIF};
+    // 开始写数据
+    [library writeImageDataToSavedPhotosAlbum:data metadata:metadata completionBlock:^(NSURL *assetURL, NSError *error) {
+        
+        if (error) {
+            NSLog(@"写数据失败：%@",error);
+            [self show_save_result:error];
+        } else {
+            [library assetForURL:assetURL resultBlock:^(ALAsset *asset) {
+                NSLog(@"成功保存到相册");
+                [self show_save_result:NULL];
+            } failureBlock:^(NSError *error) {
+                NSLog(@"gif保存到的ALAsset有问题, URL：%@，err:%@",assetURL, error);
+                [self show_save_result:error];
+            }];
+        }
+    }];
 }
 
 - (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
@@ -3211,7 +3405,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 - (void)action_set_mirror:(UIButton *)sender {
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        [CNCMobStreamSDK set_source_mirror:source_mirror preview_mirror_:preview_mirror];
+        [CNCMobStreamSDK set_source_mirror:source_mirror preview_mirror:preview_mirror];
         dispatch_async(dispatch_get_main_queue(), ^(){
             [self.mirror_set_view removeFromSuperview];
         });

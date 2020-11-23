@@ -11,14 +11,12 @@
 #import "CNCComDelegateDef.h"
 
 @protocol CNCCaptureVideoDataManagerDelegate <NSObject>
-///采集sample_buf输出
-- (void)capture_sample_bufferRef_data:(CMSampleBufferRef)sample_buf time_stamp:(unsigned int)time_stamp;
-///采集pixelBuffer输出
-- (void)capture_pixel_bufferRef_data:(CVPixelBufferRef)pixelBuffer time_stamp:(unsigned int)time_stamp;
+
 ///采集buf输出
 - (void)video_capture_buf:(void *)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(long long)ts;
-///添加水印buf输出
-- (void)overlayMask_buf:(void *)buf pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(long long)time_stamp;
+
+
+
 @end
 
 
@@ -142,15 +140,7 @@
  */
 - (CGFloat)get_current_camera_upscale;
 
-#pragma mark - 水印
-/*! @brief 设置水印 仅支持图片UIImageView及文字UILabel
- *
- * @param object 添加的水印 设置为nil为清除水印
- * @param scale 水印位置比例 (x,y,width,height) 范围为0~1
- * @param updateBlock 更新block 支持在block内对水印内容及图片进行修改
- * @return 添加水印结果
- */
-- (BOOL)overlayMaskWithObject:(UIView *)object rect:(CGRect)scale block:(void (^)(void))updateBlock;
+
 
 /*! @brief  截屏
  *

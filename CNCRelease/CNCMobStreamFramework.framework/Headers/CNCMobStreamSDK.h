@@ -212,7 +212,7 @@ extern NSString *kMobStreamSDKSendSpeedNotification;
  * @param preview_mirror 预览层镜像
  *
  */
-+ (void)set_source_mirror:(BOOL)source_mirror preview_mirror_:(BOOL)preview_mirror;
++ (void)set_source_mirror:(BOOL)source_mirror preview_mirror:(BOOL)preview_mirror;
 
 #pragma mark 软编 质量/码率优先
 /*! @brief 选择软编编码控制类型。
@@ -492,4 +492,34 @@ extern NSString *kMobStreamSDKSendSpeedNotification;
  */
 + (void)closeSocks5;
 
+
+#pragma mark --加强版镜像相关接口
+/*! @brief 设置视频显示以及展示的view
+ *
+ * @param preview 展示的view
+ * @param source_mirror 编码层镜像
+ * @param preview_mirror 预览层镜像
+ * @return 开启是否成功
+ */
++ (BOOL)set_show_video_preview:(UIView *)preview source_mirror:(BOOL)source_mirror preview_mirror:(BOOL)preview_mirror;
+
+/*! @brief 推流过程中切换摄像头
+ *
+ * @param source_mirror 编码层镜像
+ * @param preview_mirror 预览层镜像
+ * @return
+ */
++ (void)swap_cameras:(BOOL)source_mirror preview_mirror:(BOOL)preview_mirror;
+
+/*! @brief 查询当前编码层是否镜像
+*
+* @return 编码层镜像值
+*/
++ (BOOL)get_cur_source_mirror;
+
+/*! @brief 查询当前预览层是否镜像
+*
+* @return 预览层镜像值
+*/
++ (BOOL)get_cur_preview_mirror;
 @end

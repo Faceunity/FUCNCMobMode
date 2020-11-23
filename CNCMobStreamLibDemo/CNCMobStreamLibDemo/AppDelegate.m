@@ -47,6 +47,10 @@
     
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     
+    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"CNCMobSteamSDK_App_ID"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"CNCMobSteamSDK_Auth_Key"];
+    
+    
     //    MEditCardViewController *mainViewController = [[[MEditCardViewController alloc] init] autorelease];
     
     //    MBaseNavigationViewController *nav = [[[MBaseNavigationViewController alloc] initWithRootViewController:mainViewController] autorelease];

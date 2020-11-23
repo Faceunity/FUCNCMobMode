@@ -79,14 +79,18 @@
  */
 - (void)inputFrameBuffer:(void *)buffer pix_width:(int)pix_width pix_height:(int)pix_height format:(CNCENM_Buf_Format)format time_stamp:(unsigned int)ts;
 
-/*! @brief 将视频帧数据pixelBuffer发给SDK用于编码及RTMP推流。
+/*! @brief 将视频帧数据pixelBuffer发给SDK用于编码
  *
  * @param pixelBuffer 视频帧数据块起
  * @param format 数据块格式
  * @param ts 视频帧的时间戳
  * @return 无。
  */
+- (void)inputFramePixel:(CVPixelBufferRef)pixelBuffer format:(CNCENM_Buf_Format)format time_stamp:(long long)ts;
+
+/*接口改为inputPixel:format:time_stamp:
 - (void)send_frame_pixelBufferRef:(CVPixelBufferRef)pixelBuffer format:(CNCENM_Buf_Format)format time_stamp:(long long)ts;
+*/
 
 /*! @brief 选择软编编码控制类型。
  *

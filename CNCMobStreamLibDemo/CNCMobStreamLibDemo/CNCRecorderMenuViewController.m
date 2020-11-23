@@ -98,7 +98,7 @@
     {
         self.use_recommend_video_resolution = YES;
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(_screenWidth/3.0, _currentUIMaxY, _screenWidth/3.0, height);
+        btn.frame = CGRectMake(_screenWidth/8.0, _currentUIMaxY, _screenWidth/4.0, height);
         [btn setTitle:[self.array_video_resolution objectAtIndex:self.cur_idx_video] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(action_set_video_resolution:) forControlEvents:UIControlEventTouchUpInside];
@@ -108,13 +108,32 @@
         
     }
     
+    {
+        //镜像设置
+        self.cur_mirror_idx = 0;
+        self.array_mirror = [NSArray arrayWithObjects:
+                             @"默认镜像设置",
+                             @"预览:Y 编码:Y",
+                             @"预览:Y 编码:N",
+                             @"预览:N 编码:N",
+                             @"预览:N 编码:Y",
+                             nil];
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(_screenWidth/2, _currentUIMaxY, 3*_screenWidth/8, height);
+        [btn setTitle:[self.array_mirror objectAtIndex:self.cur_mirror_idx] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(action_set_mirror:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btn];
+        btn.tag = 2006;
+        
+    }
     
     _currentUIMaxY += height;
     
     {
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(_screenWidth/3.0, _currentUIMaxY, _screenWidth/3.0, height);
+        btn.frame = CGRectMake(_screenWidth/8.0, _currentUIMaxY, _screenWidth/4.0, height);
         [btn setTitle:[self.array objectAtIndex:self.cur_idx] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(action_switch_w_x_h:) forControlEvents:UIControlEventTouchUpInside];
@@ -125,7 +144,9 @@
         [self set_def_w_x_h];
     }
     
+    
     _currentUIMaxY += height;
+    
     {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(100, _currentUIMaxY, _screenWidth-200, 50);
@@ -159,7 +180,7 @@
         CGRect rect = CGRectMake(170, _currentUIMaxY, 90, 30);
         UILabel *label = [[[UILabel alloc]init] autorelease];
         label.frame = rect;
-        label.text = @"socks5:";
+        label.text = @"Socket5：";
         label.textAlignment = NSTextAlignmentLeft;
         label.textColor = [UIColor blackColor];
         label.font = [UIFont systemFontOfSize:15.f];
@@ -171,7 +192,7 @@
         [continuePushSwitch setSelected:bPushInBk];
         [continuePushSwitch setOn:bPushInBk];
         [continuePushSwitch addTarget:self action:@selector(actionOpenOrcloseSocks5:) forControlEvents:UIControlEventValueChanged];
-        [self.view addSubview:self.socksSwitch = continuePushSwitch];
+        [self.view addSubview:self.socketSwitch = continuePushSwitch];
     }
     
 }
@@ -274,6 +295,33 @@
     [alert release];
 }
 
+
+- (void)action_set_mirror:(UIButton *)btn {
+    //初始化AlertView
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
+                                                    message:@""
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:nil];
+    //设置标题与信息，通常在使用frame初始化AlertView时使用
+    alert.title = @"选择镜像设置";
+    //    alert.message = @"AlertViewMessage";
+    
+    //这个属性继承自UIView，当一个视图中有多个AlertView时，可以用这个属性来区分
+    alert.tag = 996;
+    //只读属性，看AlertView是否可见
+    NSLog(@"%d",alert.visible);
+    //通过给定标题添加按钮
+    
+    for (NSString *s in self.array_mirror) {
+        [alert addButtonWithTitle:s];
+    }
+    
+    //显示AlertView
+    [alert show];
+    [alert release];
+}
+
 #pragma marks -- UIAlertViewDelegate --
 //根据被点击按钮的索引处理点击事件
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -326,6 +374,15 @@
 
             
         }
+    } else if (alertView.tag == 996) {
+        
+        if (buttonIndex > 0) {
+            NSString *s = [self.array_mirror objectAtIndex:buttonIndex-1];
+            UIButton *btn = [self.view viewWithTag:2006];
+            [btn setTitle:s forState:UIControlStateNormal];
+            NSInteger new_idx = buttonIndex-1;
+            self.cur_mirror_idx = new_idx;
+        }
     }
 
 }
@@ -372,8 +429,11 @@
     CNCVideoRecordViewController *vc = [[[CNCVideoRecordViewController alloc] init] autorelease];
     vc.stream_cfg = para;
     vc.sw_encoder_priority_type = self.sw_encoder_priority_type;
+    vc.mirror_idx = self.cur_mirror_idx;
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
     
     [self presentViewController:vc animated:YES completion:^(){
+        
     }];
 }
 
@@ -407,7 +467,7 @@
         if (self.proxyViewController == nil) {
             self.proxyViewController = [[[ProxyConfigViewController alloc] initWithNibName:@"ProxyConfigViewController" bundle:nil] autorelease];
         }
-        
+        self.proxyViewController.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:self.proxyViewController animated:YES completion:nil];
     } else {
         [CNCMobStreamSDK closeSocks5];
@@ -424,7 +484,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.socksSwitch setOn:[CNCMobStreamSDK isUseSocks5Push] animated:YES];
+    [self.socketSwitch setOn:[CNCMobStreamSDK isUseSocks5Push] animated:YES];
     
     [super viewDidAppear:animated];
 }
@@ -451,7 +511,7 @@
     
     self.rtmp_config_pickview = nil;
     self.proxyViewController = nil;
-    self.socksSwitch = nil;
+    self.socketSwitch = nil;
     [super dealloc];
 }
 
