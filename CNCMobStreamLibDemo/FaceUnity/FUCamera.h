@@ -8,36 +8,49 @@
 
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
-@class FUCamera;
-typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
-    /* 先找人脸对焦模式 */
-    FUCameraModelAutoFace,
-    /* 固定点对焦模式 */
-    FUCameraModelChangeless
-};
 
+@class FUCamera;
+
+@protocol FUCameraAudioDelegate <NSObject>
+
+//音频
+- (void)didOutputAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+
+@end
 
 @protocol FUCameraDelegate <NSObject>
 
-- (void)didOutputVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+-(void)didOutputVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer;
+
 
 @end
 
 @protocol FUCameraDataSource <NSObject>
 
-- (CGPoint)faceCenterInImage:(FUCamera *)camera ;
+- (CGPoint)fuCaptureFaceCenterInImage:(FUCamera *)camera ;
 
 @end
 
+typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
+    /* 先找人脸对焦模式 */
+    FUCameraFocusModelAutoFace,
+    /* 固定点对焦模式 */
+    FUCameraFocusModelChangeless
+};
 
 @interface FUCamera : NSObject
+@property (nonatomic, weak) id<FUCameraAudioDelegate> audioDelegate;
 @property (nonatomic, weak) id<FUCameraDelegate> delegate;
 @property (nonatomic, weak) id<FUCameraDataSource> dataSource;
 @property (nonatomic, assign, readonly) BOOL isFrontCamera;
+@property (nonatomic, assign, readonly) BOOL isMirrored;
+@property (nonatomic, assign, readonly) AVCaptureVideoOrientation videoOrientation;
+
 @property (assign, nonatomic) int captureFormat; //采集格式
 @property (copy  , nonatomic) dispatch_queue_t  videoCaptureQueue;//视频采集的队列
 @property (copy  , nonatomic) dispatch_queue_t  audioCaptureQueue;//音频采集队列
 @property (copy  , nonatomic) dispatch_queue_t  tmpCaptureQueue;//视频采集的队列
+@property (assign, nonatomic) AVCaptureSessionPreset sessionPreset;
 
 
 - (instancetype)initWithCameraPosition:(AVCaptureDevicePosition)cameraPosition captureFormat:(int)captureFormat;
@@ -87,7 +100,7 @@ typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
 
  @param sessionPreset string constants
  */
--(BOOL)changeSessionPreset:(AVCaptureSessionPreset)sessionPreset;
+- (BOOL)changeSessionPreset:(AVCaptureSessionPreset)sessionPreset;
 
 
 /**
@@ -95,7 +108,7 @@ typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
 
  @param videoMirrored  videoMirrore
  */
--(void)changeVideoMirrored:(BOOL)videoMirrored;
+- (void)changeVideoMirrored:(BOOL)videoMirrored;
 
 /**
  修改帧率
@@ -103,7 +116,7 @@ typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
  在iOS上，使用AvCaptureDevice的setActiveFormat:和AvCaptureSession的setSessionPreset:是互斥的。
  如果 frameRate <= 30 setActiveFormat 则该设备所连接的会话将其预设更改为avCaptureSessionPresetinputPriority
  */
--(void)changeVideoFrameRate:(int)frameRate;
+- (void)changeVideoFrameRate:(int)frameRate;
 
 
 - (void)setExposureValue:(float)value;
@@ -118,7 +131,7 @@ typedef NS_ENUM( NSInteger, FUCameraFocusModel) {
 
 ///  修改对焦模式
 /// @param modle 对焦模式
--(void)cameraChangeModle:(FUCameraFocusModel)modle;
+- (void)cameraChangeModle:(FUCameraFocusModel)modle;
 
 //  缩放
 //  可用于模拟对焦

@@ -9,13 +9,14 @@
 
 #import "FURecordEncoder.h"
 
-@interface FURecordEncoder ()
+@interface FURecordEncoder () {
+    BOOL _isWriting;
+}
 
 @property (nonatomic, strong) AVAssetWriter *writer;//媒体写入对象
 @property (nonatomic, strong) AVAssetWriterInput *videoInput;//视频写入
 @property (nonatomic, strong) AVAssetWriterInput *audioInput;//音频写入
 @property (nonatomic, strong) NSString *path;//写入路径
-
 @end
 
 @implementation FURecordEncoder
@@ -91,10 +92,19 @@
 }
 
 //完成视频录制时调用
-- (void)finishWithCompletionHandler:(void (^)(void))handler {
+- (void)finishWithCompletionHandler:(void (^)(NSString *filePath))handler {
     NSLog(@"--------------%ld",(long)_writer.status);
+    _isWriting = NO;
+    __weak typeof(self) weak = self;
     if (_writer.status == AVAssetWriterStatusWriting) {
-        [_writer finishWritingWithCompletionHandler:handler];
+        NSLog(@"video is complenting!!!!");
+        
+        [_writer finishWritingWithCompletionHandler:^{
+            NSLog(@"video is complented , status == %ld",(long)self->_writer.status);
+            if (handler) {
+                handler(weak.path);
+            }
+        }];
     }
 }
 
@@ -109,28 +119,34 @@
             //开始写入
             [_writer startWriting];
             [_writer startSessionAtSourceTime:startTime];
-            NSLog(@"-------写----");
+            _isWriting = YES;
+            NSLog(@"-------开始写----");
         }
         //写入失败
         if (_writer.status == AVAssetWriterStatusFailed) {
             NSLog(@"writer error %@", _writer.error.localizedDescription);
             return NO;
         }
-        //判断是否是视频
-        if (isVideo) {
-            //视频输入是否准备接受更多的媒体数据
-            if (_videoInput.readyForMoreMediaData == YES) {
-                //拼接数据
-                [_videoInput appendSampleBuffer:sampleBuffer];
-                return YES;
+        if (_isWriting) {
+            //判断是否是视频
+            if (isVideo) {
+                //视频输入是否准备接受更多的媒体数据
+                if (_videoInput.readyForMoreMediaData == YES) {
+                    //拼接数据
+                    NSLog(@"开始添加帧");
+                    [_videoInput appendSampleBuffer:sampleBuffer];
+                    return YES;
+                }
+            }else {
+                //音频输入是否准备接受更多的媒体数据
+                if (_audioInput.readyForMoreMediaData) {
+                    //拼接数据
+                    [_audioInput appendSampleBuffer:sampleBuffer];
+                    return YES;
+                }
             }
-        }else {
-            //音频输入是否准备接受更多的媒体数据
-            if (_audioInput.readyForMoreMediaData) {
-                //拼接数据
-                [_audioInput appendSampleBuffer:sampleBuffer];
-                return YES;
-            }
+        } else {
+            NSLog(@"正在处理视频中，不允许写入");
         }
     }
     return NO;
