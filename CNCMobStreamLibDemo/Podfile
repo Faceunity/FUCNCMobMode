@@ -5,14 +5,8 @@
 
 target 'CNCMobStreamLibDemoFU' do
   
-  
-   pod 'SVProgressHUD'
-   pod 'FLAnimatedImage'
    pod 'Masonry'
-   pod 'AFNetworking'
-   pod 'SDWebImage'
    pod 'MJExtension'
    pod 'SVProgressHUD'
-   pod 'Nama', '~> 7.2.0'
 
 end

@@ -11,10 +11,10 @@
 /**faceU */
 #import "Masonry.h"
 #import "FUManager.h"
-#import "FUAPIDemoBar.h"
 #import "FUCamera.h"
-#import "FUOpenGLView.h"
 #import "FUTestRecorder.h"
+#import "UIViewController+FaceUnityUIExtension.h"
+#import <FURenderKit/FUGLDisplayView.h>
 
 #import "MBProgressHUD.h"
 #include <sys/utsname.h>
@@ -38,7 +38,7 @@ unsigned long long mGetTickCountFU()
     }
     return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 }
-@interface CNCVideoLayeredViewControllerFU () <UIGestureRecognizerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,CNCMobStreamAudioEngineDelegate, CNCMobStreamVideoEncoderDelegate, CNCCaptureVideoDataManagerDelegate, CNCMobStreamRtmpSenderDelegate,UITableViewDataSource,UITableViewDelegate,FUAPIDemoBarDelegate,FUCameraDelegate> {
+@interface CNCVideoLayeredViewControllerFU () <UIGestureRecognizerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,CNCMobStreamAudioEngineDelegate, CNCMobStreamVideoEncoderDelegate, CNCCaptureVideoDataManagerDelegate, CNCMobStreamRtmpSenderDelegate,UITableViewDataSource,UITableViewDelegate,FUCameraDelegate> {
     
     
     CGFloat _beginGestureScale;
@@ -171,16 +171,13 @@ unsigned long long mGetTickCountFU()
 @property (nonatomic) int ppslen;
 @property (nonatomic) int spslen;
 
-@property (nonatomic, retain) FUOpenGLView *preview;
+@property (nonatomic, retain) FUGLDisplayView *preview;
 //属性
 @property (nonatomic, retain) UILabel  *attribute_label;
 @property (nonatomic, retain) NSMutableArray *sticker_array;
 @property (nonatomic, retain) NSMutableArray *filter_array;
 @property (nonatomic, retain) NSMutableArray *sticker_title_array;
 @property (nonatomic, retain) NSMutableArray *filter_title_array;
-
-/**faceU */
-@property (nonatomic, retain) FUAPIDemoBar *demoBar;
 
 /** 外部设备采集 */
 @property(nonatomic, retain) FUCamera *mCamera;
@@ -191,9 +188,6 @@ unsigned long long mGetTickCountFU()
 //record code UI
 @property (nonatomic, retain) UITableView *record_code_tableView;
 @property (nonatomic, retain) __block NSMutableArray *record_code_data_array;
-
-
-
 
 @end
 
@@ -234,13 +228,13 @@ unsigned long long mGetTickCountFU()
 - (void)init_capture_manager {
     while (self.has_video) {
         
-        self.preview = [[[FUOpenGLView alloc] init] autorelease];
-        self.preview.contentMode = FUOpenGLViewContentModeScaleAspectFill;
+        self.preview = [[[FUGLDisplayView alloc] init] autorelease];
+        self.preview.contentMode = FUGLDisplayViewContentModeScaleAspectFill;
         self.preview.frame = CGRectMake(0, 0, screen_w_, screen_h_);
         self.preview.backgroundColor = [UIColor blackColor];
         [self.view addSubview:self.preview];
         
-        self.mCamera = [[[FUCamera alloc] init] autorelease];
+        self.mCamera = [[[FUCamera alloc] initWithCameraPosition:(AVCaptureDevicePositionFront) captureFormat:kCVPixelFormatType_32BGRA] autorelease];
         if (self.mCamera == nil) {
             
             self.has_video = NO;
@@ -1649,81 +1643,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 }
 
 #pragma mark -------------FaceUnity-------
-/**------   FaceUnity   ------**/
-/// FUSDK初始化
-- (void)setupFaceUnity{
-    
-    [[FUTestRecorder shareRecorder] setupRecord];
-    [[FUManager shareManager] loadFilter];
-    [FUManager shareManager].isRender = YES;
-    [FUManager shareManager].flipx = YES;
-    [FUManager shareManager].trackFlipx = YES;
-    [[FUManager shareManager] setAsyncTrackFaceEnable:NO];
-    
-    self.demoBar = [[FUAPIDemoBar alloc] init];
-    [self.view addSubview:self.demoBar];
-    self.demoBar.mDelegate = self;
-    
-    [self.demoBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        if (@available(iOS 11.0, *)) {
-            make.left.mas_equalTo(self.view.mas_safeAreaLayoutGuideLeft);
-            make.right.mas_equalTo(self.view.mas_safeAreaLayoutGuideRight);
-            make.bottom.mas_equalTo(self.view.mas_safeAreaLayoutGuideBottom)
-            .mas_equalTo(-50);
-            
-        } else {
-           
-            make.left.right.mas_equalTo(0);
-            make.bottom.mas_equalTo(-50);
-            
-        }
-        make.height.mas_equalTo(195);
-        
-    }];
-    
-    
-}
-
-
-// 销毁道具
-- (void)destoryFaceunityItems
-{
-
-    [[FUManager shareManager] destoryItems];
-    
-}
-
-#pragma -FUAPIDemoBarDelegate
--(void)filterValueChange:(FUBeautyParam *)param{
-    [[FUManager shareManager] filterValueChange:param];
-}
-
--(void)switchRenderState:(BOOL)state{
-    [FUManager shareManager].isRender = state;
-}
-
--(void)bottomDidChange:(int)index{
-    if (index < 3) {
-        [[FUManager shareManager] setRenderType:FUDataTypeBeautify];
-    }
-    if (index == 3) {
-        [[FUManager shareManager] setRenderType:FUDataTypeStrick];
-    }
-    
-    if (index == 4) {
-        [[FUManager shareManager] setRenderType:FUDataTypeMakeup];
-    }
-    if (index == 5) {
-        
-        [[FUManager shareManager] setRenderType:FUDataTypebody];
-    }
-}
-
-/**------   FaceUnity   ------**/
-
 #pragma mark ------ FUCamera Loading
-
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -1736,7 +1656,6 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     [super viewWillDisappear:animated];
     
     [self.mCamera resetFocusAndExposureModes];
-    [self.mCamera stopCapture];
     
     /* 清一下信息，防止快速切换有人脸信息缓存 */
     [[FUManager shareManager] onCameraChange];
@@ -1748,7 +1667,6 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 
 - (void)didOutputVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer{
     
-    [[FUTestRecorder shareRecorder] processFrameWithLog];
     CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     
     int pix_width = (int) CVPixelBufferGetWidth(pixelBuffer);
@@ -1757,7 +1675,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     if (!is_pause_opengl_view){
         if (is_fu_open) {
             
-            [[FUTestRecorder shareRecorder] processFrameWithLog];
+            [[FUTestRecorder shareRecorder] processFrameWithLog]; //测试阶段查看性能使用,正式环境请勿添加
             CVPixelBufferRef process_pixelbuffer = [[FUManager shareManager] renderItemsToPixelBuffer:pixelBuffer];
             
             CVPixelBufferRetain(process_pixelbuffer);
@@ -1767,6 +1685,9 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             
             //FU 编码
             [self do_encoder_fu:process_pixelbuffer format:CNCENM_buf_format_BGRA time_stamp:ts];
+            
+            // 测试阶段未检测到人脸人体提示语,正式环境请勿添加
+            [self checkAI];
             
             CVPixelBufferUnlockBaseAddress(process_pixelbuffer, 0);
             CVPixelBufferRelease(process_pixelbuffer);
@@ -2306,6 +2227,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
             [self.record_manager stop_store_video];
         }
         [self.capture_manager stop_capture];
+        [self.mCamera stopCapture];
         [self stopPushAndRelease];
         
         
@@ -3403,6 +3325,8 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
                 
                 //FU 编码
                 [self do_encoder_fu:process_pixelbuffer format:format time_stamp:ts];
+                
+                [self checkAI];
                 
                 CVPixelBufferUnlockBaseAddress(process_pixelbuffer, 0);
                 CVPixelBufferRelease(process_pixelbuffer);
