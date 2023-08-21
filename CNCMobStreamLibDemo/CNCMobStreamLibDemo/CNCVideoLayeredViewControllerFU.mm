@@ -222,12 +222,8 @@ unsigned long long mGetTickCountFU()
     /**faceU */
     is_fu_open = YES;
     // FaceUnity UI
-    CGFloat safeAreaBottom = 0;
-    if (@available(iOS 11.0, *)) {
-        safeAreaBottom = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-    }
-    self.demoManager = [[FUDemoManager alloc] initWithTargetController:self originY:CGRectGetHeight(self.view.frame) - FUBottomBarHeight - safeAreaBottom - 88];
-    
+    [FUDemoManager setupFUSDK];
+    [[FUDemoManager shared] addDemoViewToView:self.view originY:CGRectGetHeight(self.view.frame) - FUBottomBarHeight - FUSafaAreaBottomInsets() - 88];
 }
 - (void)init_capture_manager {
     while (self.has_video) {
@@ -487,7 +483,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 #pragma mark - CNCMobStreamRtmpSender Initial
 - (void)initialMobStreamRtmpSender {
     
-    self.rtmpSender = [[[CNCMobStreamRtmpSender alloc] initWithRtmpUrlString:@"rtmp://112.240.60.233/vclient.push.com/live/faceunity/533"] autorelease];
+    self.rtmpSender = [[[CNCMobStreamRtmpSender alloc] initWithRtmpUrlString:@"rtmp://112.240.6"] autorelease];
     
 }
 - (void)resign_active:(NSNotification *)noti {
@@ -1661,14 +1657,13 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     [self.mCamera resetFocusAndExposureModes];
     
     /* 清一下信息，防止快速切换有人脸信息缓存 */
-    [[FUManager shareManager] onCameraChange];
+    [FUDemoManager resetTrackedResult];
     
 }
 
 
 #pragma mark ----------FUCameraDelegate-----
-
-- (void)didOutputVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer{
+- (void)didOutputVideoSampleBuffer:(CMSampleBufferRef)sampleBuffer captureDevicePosition:(AVCaptureDevicePosition)position{
     
     CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     
@@ -1678,7 +1673,21 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     if (!is_pause_opengl_view){
         if (is_fu_open) {
             
-            CVPixelBufferRef process_pixelbuffer = [[FUManager shareManager] renderItemsToPixelBuffer:pixelBuffer];
+            CVPixelBufferRef process_pixelbuffer = pixelBuffer;
+            [[FUDemoManager shared] checkAITrackedResult];
+            if ([FUDemoManager shared].shouldRender) {
+                [[FUTestRecorder shareRecorder] processFrameWithLog];
+                [FUDemoManager updateBeautyBlurEffect];
+                FURenderInput *input = [[FURenderInput alloc] init];
+                input.renderConfig.imageOrientation = FUImageOrientationUP;
+                input.pixelBuffer = pixelBuffer;
+                //开启重力感应，内部会自动计算正确方向，设置fuSetDefaultRotationMode，无须外面设置
+                input.renderConfig.gravityEnable = YES;
+                FURenderOutput *output = [[FURenderKit shareRenderKit] renderWithInput:input];
+                if (output) {
+                    process_pixelbuffer = output.pixelBuffer;
+                }
+            }
             
             CVPixelBufferRetain(process_pixelbuffer);
             CVPixelBufferLockBaseAddress(process_pixelbuffer,0);
@@ -2119,7 +2128,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
                 [self.capture_manager set_source_mirror:NO];
                 
             }
-            [[FUManager shareManager] onCameraChange];
+            [FUDemoManager resetTrackedResult];
             
             [progressHud_ hide:YES];
             self.torchButton.selected = NO;
@@ -2138,7 +2147,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
     sender.selected = !sender.isSelected;
     if (sender.isSelected) {
         
-        NSString *rtmp_name = @"rtmp://112.240.61.174/vclient.push.com/live/faceunity/533";
+        NSString *rtmp_name = @"rtmp://";
         if (![self isTrueRtmpUrl:rtmp_name]) {
             sender.selected = NO;
             [sender setEnabled:YES];
@@ -2397,7 +2406,7 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
 //    [self.faceunity_manager destoryFaceunityItems];
 //    self.faceunity_manager = nil;
 //    self.demo_bar = nil;
-    [[FUManager shareManager] destoryItems];
+    [FUDemoManager destory];
     
     
     [self audioParamDealloc];
@@ -3313,7 +3322,21 @@ static NSString *CNCRecordCodeTableViewIdentifier = @"CNCRecordCodeTableViewIden
         if (!is_pause_opengl_view){
             if (is_fu_open) {
                 
-                CVPixelBufferRef process_pixelbuffer = [[FUManager shareManager] renderItemsToPixelBuffer:pixelBuffer];
+                CVPixelBufferRef process_pixelbuffer = pixelBuffer;
+                [[FUDemoManager shared] checkAITrackedResult];
+                if ([FUDemoManager shared].shouldRender) {
+                    [[FUTestRecorder shareRecorder] processFrameWithLog];
+                    [FUDemoManager updateBeautyBlurEffect];
+                    FURenderInput *input = [[FURenderInput alloc] init];
+                    input.renderConfig.imageOrientation = FUImageOrientationUP;
+                    input.pixelBuffer = pixelBuffer;
+                    //开启重力感应，内部会自动计算正确方向，设置fuSetDefaultRotationMode，无须外面设置
+                    input.renderConfig.gravityEnable = YES;
+                    FURenderOutput *output = [[FURenderKit shareRenderKit] renderWithInput:input];
+                    if (output) {
+                        process_pixelbuffer = output.pixelBuffer;
+                    }
+                }
                 
                 CVPixelBufferRetain(process_pixelbuffer);
                 CVPixelBufferLockBaseAddress(process_pixelbuffer,0);

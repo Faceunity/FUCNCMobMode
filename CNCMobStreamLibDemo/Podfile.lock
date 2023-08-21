@@ -15,7 +15,7 @@ PODS:
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
   - FLAnimatedImage (1.0.12)
-  - FURenderKit (8.3.0)
+  - FURenderKit (8.7.0)
   - Masonry (1.1.0)
   - MJExtension (3.2.2)
   - SDWebImage (5.9.3):
@@ -26,7 +26,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking
   - FLAnimatedImage
-  - FURenderKit (~> 8.3.0)
+  - FURenderKit (~> 8.7.0)
   - Masonry
   - MJExtension
   - SDWebImage
@@ -34,24 +34,23 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
-    - FURenderKit
-  trunk:
     - AFNetworking
     - FLAnimatedImage
+    - FURenderKit
     - Masonry
     - MJExtension
     - SDWebImage
     - SVProgressHUD
 
 SPEC CHECKSUMS:
-  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
+  AFNetworking: 3bd23d814e976cd148d7d44c3ab78017b744cd58
   FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
-  FURenderKit: 3cd05abd03134d287a1d63cbaaeb95d304ba6bd6
+  FURenderKit: a73f9a86fc4b2963c6c29bd58f0b42a953cf9362
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MJExtension: d9b9c74cbdeb724c1e9ecbb157b318276e62e876
   SDWebImage: a31ee8e90a97303529e03fb0c333eae0eacb88e9
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: 1605eb7d26d8c73fef682223cd8466fd206103a5
+PODFILE CHECKSUM: 8a2f79dbbedbb73b9affe65f18a568712a968edc
 
 COCOAPODS: 1.11.3
